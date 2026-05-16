@@ -256,15 +256,15 @@ export default function SubjectsPage() {
   }
 
   return (
-    <div className="space-y-10">
-      <header className="app-hero rounded-[2rem] px-7 py-8">
+    <div className="space-y-8 pb-36 md:space-y-10 md:pb-10">
+      <header className="app-hero rounded-[1.75rem] px-5 py-6 sm:rounded-[2rem] sm:px-7 sm:py-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="app-kicker text-xs font-bold uppercase">Academic Planning</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-zinc-950 md:text-5xl">{tNav('subjects')}</h1>
-            <p className="mt-3 max-w-3xl text-lg leading-8 text-zinc-600">{t('intro')}</p>
+            <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 sm:text-4xl md:text-5xl">{tNav('subjects')}</h1>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">{t('intro')}</p>
           </div>
-          <div className="min-w-[300px] rounded-[1.8rem] border border-white/60 bg-white/85 p-5 shadow-[0_12px_26px_rgba(15,23,42,0.05)] dark:border-zinc-700 dark:bg-zinc-950/60">
+          <div className="w-full rounded-[1.6rem] border border-white/60 bg-white/85 p-4 shadow-[0_12px_26px_rgba(15,23,42,0.05)] dark:border-zinc-700 dark:bg-zinc-950/60 sm:p-5 md:max-w-md">
             <p className="mb-1 text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
               {t('profileCard.title')}
             </p>
@@ -282,17 +282,17 @@ export default function SubjectsPage() {
         </div>
       </header>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         <MetricCard label={t('summary.subjects')} value={String(subjects.length)} detail={t('summary.subjectsDetail')} />
         <MetricCard label={t('summary.credits')} value={String(totalCredits)} detail={t('summary.creditsDetail')} />
         <MetricCard label={t('summary.projectedAverage')} value={projectedAverage > 0 ? projectedAverage.toFixed(2) : '0.00'} detail={t('summary.projectedAverageDetail')} />
       </section>
 
-      <section className="app-panel-strong rounded-[2rem] p-6">
+      <section className="app-panel-strong rounded-[1.75rem] p-5 sm:rounded-[2rem] sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">Vista guiada</p>
-            <h2 className="mt-2 text-2xl font-black text-zinc-950 dark:text-zinc-100">
+            <h2 className="mt-2 text-xl font-black text-zinc-950 dark:text-zinc-100 sm:text-2xl">
               Organiza tus materias de forma simple
             </h2>
             <p className="mt-2 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
@@ -302,16 +302,16 @@ export default function SubjectsPage() {
           <button
             type="button"
             onClick={() => openSubjectForm()}
-            className="rounded-full bg-[linear-gradient(135deg,#157a6e,#115e58)] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(21,122,110,0.24)] transition hover:brightness-105"
+            className="w-full rounded-full bg-[linear-gradient(135deg,#157a6e,#115e58)] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(21,122,110,0.24)] transition hover:brightness-105 md:w-auto"
           >
             {t('actions.newSubject')}
           </button>
         </div>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <span className="h-6 w-2 rounded-full bg-[var(--brand)]" />
               {t('listTitle')}
@@ -342,7 +342,7 @@ export default function SubjectsPage() {
                 const remainingWeight = Math.max(100 - completedWeight, 0);
 
                 return (
-                  <article key={subject.id} className="app-panel-strong rounded-[2rem] p-5">
+                  <article key={subject.id} className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <h3 className="text-lg font-bold text-zinc-900">{subject.name}</h3>
@@ -377,7 +377,7 @@ export default function SubjectsPage() {
                       </span>
                     </div>
 
-                    <div className="mt-5 grid gap-3 md:grid-cols-3">
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
                       <MiniCard label={t('simulatorMeta.current')} value={calculateCurrentGrade(subject).toFixed(2)} />
                       <MiniCard label={t('simulatorMeta.projected')} value={projected.toFixed(2)} />
                       <MiniCard
@@ -420,7 +420,7 @@ export default function SubjectsPage() {
         </div>
 
         <div className="space-y-6">
-          <section className="app-panel-strong rounded-[2rem] p-5">
+          <section className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-5">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <span className="h-6 w-2 rounded-full bg-emerald-500" />
               {t('profileSection')}
@@ -453,7 +453,7 @@ export default function SubjectsPage() {
             </div>
           </section>
 
-          <section ref={formSectionRef} className="app-panel-strong rounded-[2rem] p-5">
+          <section ref={formSectionRef} className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">{editing.id ? t('form.editTitle') : t('form.createTitle')}</h2>
@@ -577,7 +577,7 @@ export default function SubjectsPage() {
               ))}
             </div>
 
-            <div className="mt-6 flex justify-end gap-2">
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
               {editing.id && (
                 <button
                   type="button"

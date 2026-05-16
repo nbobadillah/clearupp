@@ -96,7 +96,7 @@ export function SessionShell({
   ].filter(Boolean) as MenuItem[];
 
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row">
+    <div className="flex min-h-screen w-full min-h-0 flex-col lg:flex-row">
       <nav className="hidden app-panel m-4 w-76 flex-col gap-7 rounded-[2.2rem] px-6 py-7 text-zinc-900 lg:flex">
         <div className="space-y-5">
           <Link href={`/${locale}/dashboard`} className="flex items-center gap-3 rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2">
@@ -248,7 +248,7 @@ export function SessionShell({
         </div>
       </div>
 
-      <main className="min-w-0 flex-1 overflow-y-auto px-3 pb-24 pt-3 md:px-4 lg:p-4 xl:p-7">
+      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto px-3 pb-32 pt-3 md:px-4 lg:p-4 xl:p-7">
         <div className="app-panel rounded-[1.8rem] px-4 py-4 sm:rounded-[2.2rem] sm:px-5 sm:py-5 md:px-7 md:py-6">
           <header className="mb-6 flex flex-col gap-4 border-b border-zinc-200/70 pb-5 md:mb-8 md:flex-row md:items-center md:justify-between">
             <div>

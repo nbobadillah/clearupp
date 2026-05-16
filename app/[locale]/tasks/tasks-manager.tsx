@@ -9,6 +9,7 @@ import {
   updateStoredActivities,
   useStoredActivities,
 } from '@/lib/activities-store';
+import { useAuthSession } from '@/lib/auth/client';
 
 type EscalationLevel = 'low' | 'medium' | 'high' | 'critical';
 
@@ -75,9 +76,12 @@ function getToday() {
 
 export function TasksManager({ copy }: { copy: TasksCopy }) {
   const activities = useStoredActivities();
+  const session = useAuthSession();
   const today = useMemo(() => getToday(), []);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const summary = useMemo(() => {
     const dueSoon = activities.filter((activity) => {
@@ -119,7 +123,7 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
       }));
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const normalizedTitle = form.title.trim();
@@ -127,54 +131,66 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
       return;
     }
 
-    if (editingId !== null) {
-      updateStoredActivities((current) =>
-        current.map((activity) =>
-          activity.id === editingId
-            ? {
-                ...activity,
-                title: normalizedTitle,
-                course: form.course.trim(),
-                type: form.type,
-                dueDate: form.dueDate,
-                priority: form.priority,
-                status: form.status,
-                reminder: form.reminder,
-                progress:
-                  form.subtasks.trim().length > 0
-                    ? 0
-                    : activity.progress,
-                subtasks:
-                  form.subtasks.trim().length > 0
-                    ? parseSubtasks(form.subtasks, editingId * 100)
-                    : activity.subtasks,
-              }
-            : activity
-        )
+    setIsSaving(true);
+    setSubmitError(null);
+
+    try {
+      await updateStoredActivities(
+        (current) => {
+          if (editingId !== null) {
+            return current.map((activity) =>
+              activity.id === editingId
+                ? {
+                    ...activity,
+                    title: normalizedTitle,
+                    course: form.course.trim(),
+                    type: form.type,
+                    dueDate: form.dueDate,
+                    priority: form.priority,
+                    status: form.status,
+                    reminder: form.reminder,
+                    progress:
+                      form.subtasks.trim().length > 0
+                        ? 0
+                        : activity.progress,
+                    subtasks:
+                      form.subtasks.trim().length > 0
+                        ? parseSubtasks(form.subtasks, editingId * 100)
+                        : activity.subtasks,
+                  }
+                : activity
+            );
+          }
+
+          const nextId = current.length === 0 ? 1 : Math.max(...current.map((activity) => activity.id)) + 1;
+
+          return [
+            {
+              id: nextId,
+              title: normalizedTitle,
+              course: form.course.trim(),
+              type: form.type,
+              dueDate: form.dueDate,
+              priority: form.priority,
+              status: form.status,
+              reminder: form.reminder,
+              progress: 0,
+              subtasks: parseSubtasks(form.subtasks, nextId * 100),
+            },
+            ...current,
+          ];
+        },
+        session?.id
       );
-    } else {
-      updateStoredActivities((current) => {
-        const nextId = current.length === 0 ? 1 : Math.max(...current.map((activity) => activity.id)) + 1;
 
-        return [
-          {
-            id: nextId,
-            title: normalizedTitle,
-            course: form.course.trim(),
-            type: form.type,
-            dueDate: form.dueDate,
-            priority: form.priority,
-            status: form.status,
-            reminder: form.reminder,
-            progress: 0,
-            subtasks: parseSubtasks(form.subtasks, nextId * 100),
-          },
-          ...current,
-        ];
-      });
+      resetForm();
+    } catch (error) {
+      console.error('Error saving activity:', error);
+      setSubmitError(error instanceof Error ? error.message : 'No fue posible guardar la actividad.');
     }
-
-    resetForm();
+    finally {
+      setIsSaving(false);
+    }
   }
 
   function handleEdit(activity: Activity) {
@@ -509,12 +525,23 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
               </Field>
             </div>
 
+            {submitError ? (
+              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                {submitError}
+              </div>
+            ) : null}
+
             <div className="flex flex-wrap gap-3">
             <button
               type="submit"
+              disabled={isSaving}
                 className="rounded-2xl bg-[linear-gradient(135deg,#157a6e,#115e58)] px-6 py-3 text-sm font-bold text-white shadow-[0_14px_30px_rgba(21,122,110,0.24)] transition hover:-translate-y-0.5 hover:brightness-105"
             >
-              {editingId === null ? copy.saveActivity : copy.updateActivity}
+              {isSaving
+                ? 'Guardando...'
+                : editingId === null
+                  ? copy.saveActivity
+                  : copy.updateActivity}
             </button>
             <button
               type="button"
