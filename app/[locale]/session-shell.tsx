@@ -246,6 +246,24 @@ export function SessionShell({
             })}
           </div>
         </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={isPending}
+            className="inline-flex items-center justify-center rounded-2xl border border-[var(--line)] bg-white/85 px-3 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {copy.signOut}
+          </button>
+
+          <Link
+            href={locale === 'es' ? '/en' : '/es'}
+            className="inline-flex items-center justify-center rounded-2xl border border-[var(--line)] bg-white/85 px-3 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)] transition hover:bg-white"
+          >
+            {copy.switchLanguage}
+          </Link>
+        </div>
       </div>
 
       <main className="min-h-0 min-w-0 flex-1 overflow-y-auto px-3 pb-32 pt-3 md:px-4 lg:p-4 xl:p-7">
