@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { buildApiUrl } from '@/lib/api';
-import { clearClientSession } from '@/lib/auth/client';
+import { clearClientSession, expireClientSession } from '@/lib/auth/client';
 import type { AuthSession } from '@/lib/auth/shared';
 
 import { AppIcon, type AppIconName } from './app-icon';
@@ -71,6 +71,32 @@ export function SessionShell({
       router.replace(`/${locale}/dashboard`);
     }
   }, [isAuthPage, isPrivateRoute, locale, router, session]);
+
+  useEffect(() => {
+    if (!session || !isPrivateRoute) {
+      return;
+    }
+
+    let cancelled = false;
+
+    fetch(buildApiUrl('/api/auth/session'), { cache: 'no-store', credentials: 'include' })
+      .then((response) => {
+        if (cancelled || response.ok) {
+          return;
+        }
+
+        if (response.status === 401) {
+          expireClientSession();
+        }
+      })
+      .catch(() => {
+        // Ignoramos fallos de red transitorios para no expulsar al usuario por ruido.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPrivateRoute, session]);
 
   async function handleSignOut() {
     startTransition(async () => {

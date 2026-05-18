@@ -3,7 +3,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 
 import { buildApiUrl } from './api';
-import { getActiveClientSession, useAuthSession } from './auth/client';
+import { expireClientSession, getActiveClientSession, useAuthSession } from './auth/client';
 import { getScopedStorageKey } from './user-storage';
 import {
   normalizeActivities,
@@ -94,6 +94,11 @@ async function persistStoredActivities(activities: Activity[]) {
     credentials: 'include',
   });
 
+  if (response.status === 401) {
+    expireClientSession();
+    throw new Error('Tu sesión expiró. Inicia sesión otra vez.');
+  }
+
   if (!response.ok) {
     throw new Error(`No fue posible guardar actividades (${response.status}).`);
   }
@@ -147,6 +152,7 @@ export function syncStoredActivities(userId?: string) {
   activeSyncPromise = fetch(buildApiUrl('/api/activities'), { cache: 'no-store', credentials: 'include' })
     .then(async (response) => {
       if (response.status === 401) {
+        expireClientSession();
         writeStoredActivities([], activeSessionId);
         return [];
       }

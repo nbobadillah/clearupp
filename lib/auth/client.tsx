@@ -49,3 +49,15 @@ export function clearClientSession() {
   activeClientSession = null;
   document.cookie = `${FRONTEND_SESSION_COOKIE}=; ${buildCookieOptions(0)}`;
 }
+
+export function expireClientSession() {
+  clearClientSession();
+
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const [, locale] = window.location.pathname.split('/');
+  const nextLocale = locale === 'en' ? 'en' : 'es';
+  window.location.replace(`/${nextLocale}/sign-in`);
+}
