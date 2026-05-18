@@ -300,19 +300,19 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
   }
 
   return (
-    <div className="space-y-8">
-      <header className="app-hero rounded-[2rem] px-7 py-8">
+    <div className="space-y-6 sm:space-y-8">
+      <header className="app-hero rounded-[1.6rem] px-5 py-6 sm:rounded-[2rem] sm:px-7 sm:py-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="app-kicker text-xs font-bold uppercase">Task Studio</p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-zinc-950 md:text-5xl">
+            <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 sm:text-4xl md:text-5xl">
               {copy.title}
             </h1>
-            <p className="mt-3 max-w-3xl text-lg leading-8 text-zinc-600">
+            <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
               {copy.subtitle}
             </p>
           </div>
-          <div className="rounded-[1.7rem] border border-[var(--line)] bg-white/80 p-5 shadow-[0_18px_40px_rgba(14,42,51,0.06)]">
+          <div className="w-full rounded-[1.5rem] border border-[var(--line)] bg-white/80 p-4 shadow-[0_18px_40px_rgba(14,42,51,0.06)] sm:w-auto sm:rounded-[1.7rem] sm:p-5">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--brand)]">
               {summary.completed}/{summary.total}
             </p>
@@ -328,13 +328,13 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
         <SummaryCard label={copy.summary.completed} value={summary.completed} accent="bg-emerald-100 text-emerald-700" />
       </section>
 
-      <section className="rounded-[2rem] border border-amber-200 bg-[linear-gradient(135deg,#fff7ed,#ffffff,#fff1f2)] p-6 shadow-[0_20px_48px_rgba(245,158,11,0.08)] dark:border-amber-900/50 dark:bg-[linear-gradient(135deg,#1a2328,#101a1f,#172126)] dark:shadow-[0_20px_48px_rgba(0,0,0,0.24)]">
+      <section className="rounded-[1.6rem] border border-amber-200 bg-[linear-gradient(135deg,#fff7ed,#ffffff,#fff1f2)] p-4 shadow-[0_20px_48px_rgba(245,158,11,0.08)] dark:border-amber-900/50 dark:bg-[linear-gradient(135deg,#1a2328,#101a1f,#172126)] dark:shadow-[0_20px_48px_rgba(0,0,0,0.24)] sm:rounded-[2rem] sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-700 dark:text-amber-300">
               {copy.labels.smartReminders}
             </p>
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{copy.labels.escalationPanel}</h2>
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-2xl">{copy.labels.escalationPanel}</h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-300">
               {smartAlerts.length > 0 ? `${smartAlerts.length} ${copy.labels.alertsReady}` : copy.labels.noAlerts}
             </p>
@@ -374,14 +374,14 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
       </section>
 
       <section className="grid gap-6 2xl:grid-cols-[0.95fr_1.05fr]">
-        <form onSubmit={handleSubmit} className="app-panel-strong overflow-hidden rounded-[2rem]">
-          <div className="bg-[linear-gradient(135deg,#f7fcfb,#eef8f6)] px-6 py-6">
+        <form onSubmit={handleSubmit} className="app-panel-strong overflow-hidden rounded-[1.6rem] sm:rounded-[2rem]">
+          <div className="bg-[linear-gradient(135deg,#f7fcfb,#eef8f6)] px-4 py-5 sm:px-6 sm:py-6">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
                 <p className="text-xs font-black uppercase tracking-[0.24em] text-[var(--brand)]">
                   {editingId === null ? copy.newActivity : copy.editActivity}
                 </p>
-                <h2 className="text-3xl font-black tracking-tight text-zinc-950">
+                <h2 className="text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">
                   {editingId === null ? copy.saveActivity : copy.updateActivity}
                 </h2>
                 <p className="max-w-xl text-sm leading-6 text-zinc-600">{copy.formDescription}</p>
@@ -392,7 +392,7 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
             </div>
           </div>
 
-          <div className="space-y-6 p-6">
+          <div className="space-y-5 p-4 sm:space-y-6 sm:p-6">
             <div className="rounded-[1.7rem] border border-[rgba(21,122,110,0.16)] bg-[linear-gradient(135deg,#f8fdfc,#eef8f6)] p-4">
               <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[var(--brand)]">{copy.labels.guideTitle}</p>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -555,10 +555,10 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
         </form>
 
         <section className="space-y-4">
-          <div className="flex items-center justify-between rounded-[1.6rem] border border-[var(--line)] bg-white/72 px-5 py-4 shadow-sm">
+          <div className="flex items-center justify-between rounded-[1.4rem] border border-[var(--line)] bg-white/72 px-4 py-3 shadow-sm sm:rounded-[1.6rem] sm:px-5 sm:py-4">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--brand)]">{copy.labels.listEyebrow}</p>
-              <h2 className="text-2xl font-black tracking-tight text-zinc-900">{copy.labels.activitiesList}</h2>
+              <h2 className="text-xl font-black tracking-tight text-zinc-900 sm:text-2xl">{copy.labels.activitiesList}</h2>
             </div>
             <span className="rounded-2xl bg-[rgba(21,122,110,0.1)] px-4 py-2 text-sm font-black text-[var(--brand)]">
               {activities.length}
@@ -567,11 +567,11 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
 
           <div className="space-y-4">
             {activities.length === 0 ? (
-              <div className="rounded-[2rem] border border-dashed border-[rgba(21,122,110,0.22)] bg-[linear-gradient(135deg,#ffffff,#f3fbf9)] p-10 text-center shadow-[0_18px_45px_rgba(14,42,51,0.05)]">
+              <div className="rounded-[1.6rem] border border-dashed border-[rgba(21,122,110,0.22)] bg-[linear-gradient(135deg,#ffffff,#f3fbf9)] p-6 text-center shadow-[0_18px_45px_rgba(14,42,51,0.05)] sm:rounded-[2rem] sm:p-10">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[rgba(21,122,110,0.1)] text-3xl font-black text-[var(--brand)]">
                   ✓
                 </div>
-                <h3 className="mt-5 text-2xl font-black tracking-tight text-zinc-900">{copy.labels.emptyTitle}</h3>
+                <h3 className="mt-5 text-xl font-black tracking-tight text-zinc-900 sm:text-2xl">{copy.labels.emptyTitle}</h3>
                 <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">{copy.labels.noActivities}</p>
                 <p className="mt-5 text-xs font-black uppercase tracking-[0.2em] text-[var(--muted)]">
                   {copy.labels.emptyHint}
@@ -587,7 +587,7 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
               const escalation = getEscalation(activity, today);
 
               return (
-                <article key={activity.id} className="app-panel-strong rounded-[2rem] p-6">
+                <article key={activity.id} className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-6">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-2">
@@ -597,7 +597,7 @@ export function TasksManager({ copy }: { copy: TasksCopy }) {
                         <EscalationBadge label={copy.escalation[escalation]} level={escalation} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold text-zinc-900">
+                        <h3 className="text-xl font-bold text-zinc-900 sm:text-2xl">
                           {activity.title || copy.labels.emptyTitle}
                         </h3>
                         <p className="text-sm text-zinc-500">{activity.course}</p>

@@ -1,11 +1,13 @@
 "use client";
 
+import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { buildApiUrl } from '@/lib/api';
-import { persistClientSession, useAuthSession } from '@/lib/auth/client';
+import { clearClientSession, persistClientSession, useAuthSession } from '@/lib/auth/client';
 import type { AuthSession } from '@/lib/auth/shared';
+import { AppIcon, type AppIconName } from '../app-icon';
 
 type ProfileCopy = {
   badge: string;
@@ -23,6 +25,10 @@ type ProfileCopy = {
   save: string;
   saving: string;
   success: string;
+  signOut: string;
+  switchLanguage: string;
+  toolsTitle: string;
+  quickLinks: { name: string; href: string; icon: AppIconName }[];
   placeholders: {
     name: string;
     email: string;
@@ -30,10 +36,11 @@ type ProfileCopy = {
   };
 };
 
-export function ProfileSettings({ copy }: { copy: ProfileCopy }) {
+export function ProfileSettings({ copy, locale }: { copy: ProfileCopy; locale: string }) {
   const session = useAuthSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isSigningOut, startSignOutTransition] = useTransition();
   const [name, setName] = useState(session?.name ?? '');
   const [email, setEmail] = useState(session?.email ?? '');
   const [password, setPassword] = useState('');
@@ -70,18 +77,27 @@ export function ProfileSettings({ copy }: { copy: ProfileCopy }) {
     });
   }
 
+  function handleSignOut() {
+    startSignOutTransition(async () => {
+      await fetch(buildApiUrl('/api/auth/sign-out'), { method: 'POST', credentials: 'include' });
+      clearClientSession();
+      router.replace(`/${locale}`);
+      router.refresh();
+    });
+  }
+
   return (
-    <div className="space-y-8 py-8">
-      <header className="app-hero rounded-[2rem] px-7 py-8">
+    <div className="space-y-6 py-6 sm:space-y-8 sm:py-8">
+      <header className="app-hero rounded-[1.75rem] px-5 py-6 sm:rounded-[2rem] sm:px-7 sm:py-8">
         <p className="app-kicker text-xs font-bold uppercase">{copy.badge}</p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight text-zinc-950 dark:text-zinc-100 md:text-5xl">
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-100 sm:text-4xl md:text-5xl">
           {copy.title}
         </h1>
-        <p className="mt-3 max-w-3xl text-lg text-zinc-600 dark:text-zinc-300">{copy.subtitle}</p>
+        <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 dark:text-zinc-300 sm:text-lg">{copy.subtitle}</p>
       </header>
 
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <section className="app-panel-strong rounded-[2rem] p-6">
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <section className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-6">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[linear-gradient(135deg,#157a6e,#115e58)] text-2xl font-black text-white shadow-[0_16px_34px_rgba(21,122,110,0.22)]">
               {(session?.name ?? 'C').slice(0, 1).toUpperCase()}
@@ -99,9 +115,46 @@ export function ProfileSettings({ copy }: { copy: ProfileCopy }) {
               {copy.accountSince} {new Date().getFullYear()}
             </p>
           </div>
+
+          <div className="mt-5 space-y-4 lg:hidden">
+            <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/85 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--muted)]">{copy.toolsTitle}</p>
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {copy.quickLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={`/${locale}/${item.href}`}
+                    className="inline-flex items-center gap-3 rounded-[1.2rem] border border-[var(--line)] bg-[rgba(243,247,247,0.82)] px-4 py-3 text-sm font-semibold text-zinc-800 transition hover:bg-white"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[rgba(21,122,110,0.1)] text-[var(--brand)]">
+                      <AppIcon name={item.icon} className="h-[18px] w-[18px]" />
+                    </span>
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="inline-flex items-center justify-center rounded-[1.3rem] border border-[var(--line)] bg-white px-4 py-3 text-sm font-bold uppercase tracking-[0.16em] text-zinc-900 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSigningOut ? '...' : copy.signOut}
+              </button>
+              <Link
+                href={locale === 'es' ? '/en/profile' : '/es/profile'}
+                className="inline-flex items-center justify-center rounded-[1.3rem] border border-[var(--line)] bg-white px-4 py-3 text-sm font-bold uppercase tracking-[0.16em] text-zinc-900 transition hover:bg-zinc-50"
+              >
+                {copy.switchLanguage}
+              </Link>
+            </div>
+          </div>
         </section>
 
-        <section className="app-panel-strong rounded-[2rem] p-6">
+        <section className="app-panel-strong rounded-[1.6rem] p-4 sm:rounded-[2rem] sm:p-6">
           <div className="mb-6">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">{copy.formTitle}</p>
             <h2 className="mt-2 text-2xl font-black text-zinc-950 dark:text-zinc-100">{copy.formBody}</h2>
