@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { buildApiUrl } from '@/lib/api';
 import { persistClientSession } from '@/lib/auth/client';
@@ -30,7 +29,6 @@ type AuthCopy = {
 };
 
 export function AuthForm({ locale, copy }: { locale: string; copy: AuthCopy }) {
-  const router = useRouter();
   const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,8 +61,7 @@ export function AuthForm({ locale, copy }: { locale: string; copy: AuthCopy }) {
         persistClientSession(payload.user);
       }
 
-      router.replace(`/${locale}/dashboard`);
-      router.refresh();
+      window.location.replace(`/${locale}/dashboard`);
     });
   }
 
