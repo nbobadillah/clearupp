@@ -70,6 +70,13 @@ export function ProfileSettings({ copy, locale }: { copy: ProfileCopy; locale: s
     setPassword('');
     if (payload?.user) {
       persistClientSession(payload.user);
+
+      await fetch('/api/front-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: payload.user }),
+        credentials: 'include',
+      });
     }
     setFeedback({ type: 'success', message: copy.success });
     startTransition(() => {
@@ -80,6 +87,7 @@ export function ProfileSettings({ copy, locale }: { copy: ProfileCopy; locale: s
   function handleSignOut() {
     startSignOutTransition(async () => {
       await fetch(buildApiUrl('/api/auth/sign-out'), { method: 'POST', credentials: 'include' });
+      await fetch('/api/front-session', { method: 'DELETE', credentials: 'include' });
       clearClientSession();
       router.replace(`/${locale}`);
       router.refresh();

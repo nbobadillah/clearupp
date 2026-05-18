@@ -59,6 +59,18 @@ export function AuthForm({ locale, copy }: { locale: string; copy: AuthCopy }) {
 
       if (payload?.user) {
         persistClientSession(payload.user);
+
+        const frontSessionResponse = await fetch('/api/front-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user: payload.user }),
+          credentials: 'include',
+        });
+
+        if (!frontSessionResponse.ok) {
+          setError('No fue posible iniciar la sesión del workspace.');
+          return;
+        }
       }
 
       window.location.replace(`/${locale}/dashboard`);

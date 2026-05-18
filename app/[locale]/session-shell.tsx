@@ -75,6 +75,7 @@ export function SessionShell({
   async function handleSignOut() {
     startTransition(async () => {
       await fetch(buildApiUrl('/api/auth/sign-out'), { method: 'POST', credentials: 'include' });
+      await fetch('/api/front-session', { method: 'DELETE', credentials: 'include' });
       clearClientSession();
       router.replace(`/${locale}`);
       router.refresh();
